@@ -43,6 +43,9 @@ public class Vista extends javax.swing.JFrame {
         jButton10 = new javax.swing.JButton();
         auxiliar = new javax.swing.JButton();
 
+        lista = new ArrayList<javax.swing.JButton>();
+        turno = false;
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         fondo.setMaximumSize(new java.awt.Dimension(500, 500));
@@ -66,28 +69,35 @@ public class Vista extends javax.swing.JFrame {
         lista.add(jButton10);
 
 
+        //Guardo los botones en un ArrayList para facilitar el control, tambien les doy estética y evento
         for (int i = 0; i < lista.size(); i++) {
             lista.get(i).setFont(new java.awt.Font("Comic Sans MS", 1, 48));
             lista.get(i).setText(" ");
             posicionesTablero.add(lista.get(i));
+
+            //Evento para saber si se ha pulsado una casilla y ocuparla si es posible
             int finalI = i;
             lista.get(i).addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    identificar(finalI + "");
-
-                    ocupar(finalI, new Ficha('X'));
-
+                    if(turno) {
+                        identificar(finalI + "");
+                        if (ocupar(finalI, new Ficha('X'))) {
+                            turno = false;
+                        }
+                    }
                 }
             });
             tablero.add(lista.get(i));
 
         }
+
+        //Boton auxiliar y temporal para saltarme turno
         auxiliar.setText("AUX");
         auxiliar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 System.out.println("AUXILIAR");
-
-                ocupar(5, new Ficha('O'));
+                turno = true;
+                //ocupar(5, new Ficha('O'));
             }
         });
 
@@ -164,19 +174,37 @@ public class Vista extends javax.swing.JFrame {
         });
     }
 
+
+    //Set y Get para saber si es el turno del Jugador
+    public boolean isTurno() {
+        return turno;
+    }
+    public void setTurno(boolean turno) {
+        this.turno = turno;
+    }
+
+    /**
+     * Funcion auxiliar y temporal para saber que posición tiene en el array la casilla pulsada
+     * @param pos la posición en el arrray
+     */
     private void identificar(String pos) {
         System.out.println("POS -> " + pos);
     }
 
-
-    private boolean ocupar(int pos, Ficha ficha) {
-
+    /**
+     * Función para ocupar una casilla
+     * @param pos posición a ocupar
+     * @param ficha ficha que la va a ocupar
+     * @return (boolean) True -> La casilla se ha ocupado con exito / False -> La casilla ya estaba ocupada
+     */
+    public boolean ocupar(int pos, Ficha ficha) {
         boolean ret = false;
 
         if(lista.get(pos).getText().equals(" ")) {
             lista.get(pos).setText(ficha.getJugador() + "");
             lista.get(pos).setForeground(ficha.getColor());
-
+            System.out.println("S;" + ficha.getJugador() + ";" + pos);
+            System.out.println(turno);
             ret = true;
         }
 
@@ -197,8 +225,9 @@ public class Vista extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.ButtonGroup posicionesTablero;
-    private ArrayList<javax.swing.JButton> lista = new ArrayList();
+    private ArrayList<javax.swing.JButton> lista;
     private javax.swing.JPanel tablero;
+    private boolean turno;
 
     // End of variables declaration
 }
