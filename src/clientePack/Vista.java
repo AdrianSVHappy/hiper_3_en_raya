@@ -13,10 +13,13 @@ import javax.swing.JButton;
  */
 public class Vista extends javax.swing.JFrame {
 
+    private Cliente cli;
+
     /**
      * Creates new form Vista
      */
-    public Vista() {
+    public Vista(Cliente cli) {
+        this.cli = cli;
         initComponents();
     }
 
@@ -167,11 +170,11 @@ public class Vista extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+       /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Vista().setVisible(true);
             }
-        });
+        });*/
     }
 
 
@@ -184,11 +187,12 @@ public class Vista extends javax.swing.JFrame {
     }
 
     /**
-     * Funcion auxiliar y temporal para saber que posición tiene en el array la casilla pulsada
+     * Funcion para enviar la posición que el cliente ha pulsado en el tablero
      * @param pos la posición en el arrray
      */
-    private void identificar(String pos) {
-        System.out.println("POS -> " + pos);
+    public void identificar(String pos) {
+       System.out.println("POS -> " + pos);
+       this.cli.traducir(pos);
     }
 
     /**
